@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ujiuye.dao.MovieMapper">
+    <resultMap type="com.ujiuye.daomain.Movie" id="movieMap">
+        <id property="id" column="id" />
+        <result property="movieName" column="name" />
+        <result property="director" column="director" />
+        <result property="timelength" column="timelength" />
+        <result property="showdate" column="showdate" />
+        <result property="description" column="description" />
+        <result property="photo" column="photo" />
+
+        <collection  property="movietypes"  ofType="com.ujiuye.daomain.Movietype">
+            <id property="id" column="id" />
+            <result property="movieTypeName" column="movieTypeName" />
+        </collection>
+
+        <collection  property="actors"  ofType="com.ujiuye.daomain.Actor">
+            <id property="id" column="id" />
+            <result property="actorName" column="actorName" />
+            <result property="birthday" column="birthday" />
+            <result property="sex" column="sex" />
+            <result property="description" column="description" />
+            <result property="photo" column="photo" />
+        </collection>
+    </resultMap>
+
+    <select id="findAllMovie" resultMap="movieMap">
+        select
+        m.*,
+        a.id aid,a.name aname,a.birthday abirthday,a.sex
+        asex,a.description adescription, a.pic apic,
+        c.id cid, c.catname catname
+        from
+        movie m
+        inner join
+        movie_actor ma
+        on
+        m.id=ma.movieid
+        inner join
+        actor a
+        on
+        ma.actorid=a.id
+        inner join
+        movie_category mc
+        on
+        m.id=mc.movieid
+        inner join
+        category c
+        on mc.categoryid=c.id
+    </select>
+</mapper>

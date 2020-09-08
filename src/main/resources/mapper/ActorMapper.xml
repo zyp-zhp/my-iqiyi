@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ujiuye.dao.ActorMapper">
+
+    <resultMap type="com.ujiuye.daomain.Actor" id="actorMap">
+        <id property="id" column="id" />
+        <result property="actorName" column="actorName" />
+        <result property="birthday" column="birthday" />
+        <result property="sex" column="sex" />
+        <result property="description" column="description" />
+        <result property="photo" column="photo" />
+
+        <collection  property="regions"  ofType="com.ujiuye.daomain.Region">
+            <id property="id" column="rid" />
+            <result property="regionName" column="regionName" />
+        </collection>
+
+
+    </resultMap>
+
+    <select id="findAllActor" resultMap="actorMap">
+        select
+        a.*,
+        r.id rid, r.name rname
+        from
+        actor a
+        inner join
+        actor_region ar
+        on
+        a.id=ar.actorid
+        inner join
+        region r
+        on
+        r.id=ar.regionid
+
+    </select>
+</mapper>
