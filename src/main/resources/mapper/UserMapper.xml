@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ujiuye.dao.UserMapper">
+    <insert id="insertUser" parameterType="com.ujiuye.daomain.User">
+        insert to user(username,password) VALUES (#{username},#{password})
+        <selectKey resultType="integer" order="AFTER">
+            select LAST _INSERT _ID() AS id
+        </selectKey>
+
+    </insert>
+    <select id="findUser" resultType="com.ujiuye.daomain.User" parameterType="com.ujiuye.daomain.User">
+        select *
+        from uesr
+        where username=#{username} and password=#{password}
+    </select>
+</mapper>

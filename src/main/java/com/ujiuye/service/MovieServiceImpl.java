@@ -1,10 +1,7 @@
 package com.ujiuye.service;
 
 import com.ujiuye.dao.MovieMapper;
-import com.ujiuye.daomain.Actor;
-import com.ujiuye.daomain.Movie;
-import com.ujiuye.daomain.Movietype;
-import com.ujiuye.daomain.Recommend;
+import com.ujiuye.daomain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +19,15 @@ public class MovieServiceImpl implements IMovieService {
     }
     @Override
     //2) 新增电影接口
-    public Movie insertMovie(Movie movie){
-        return movieMapper.insertMovie(movie);
+    public void insertMovie(Movie movie){
+        movieMapper.insertMovie(movie);
+        int mid=movie.getId();
+        List<Movietype> movietypes =movie.getMovietypes();
+        for (Movietype c : movietypes){
+            int cid=c.getId();
+            MovieAndType mat =new MovieAndType(mid,cid);
+            movieMapper.insertMovieAndType(mat);
+        }
     }
     @Override
     //3) 修改电影接口

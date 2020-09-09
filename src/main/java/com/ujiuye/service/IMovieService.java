@@ -11,7 +11,7 @@ public interface IMovieService {
     //1) 电影列表查询接口
     public List<Movie> findAllMovie();
     //2) 新增电影接口
-    public Movie insertMovie(Movie movie);
+    public void insertMovie(Movie movie);
     //3) 修改电影接口
     public Integer updateMovieById(Movie movie);
     //4) 删除电影接口

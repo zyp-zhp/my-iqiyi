@@ -12,5 +12,5 @@ import lombok.ToString;
 public class Recommend {
     private Integer id;
     private String way;
-
+    private int isrecommend;
 }

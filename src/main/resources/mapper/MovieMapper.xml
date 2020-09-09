@@ -52,4 +52,17 @@
         category c
         on mc.categoryid=c.id
     </select>
+
+    <insert id="insertMovie" parameterType="com.ujiuye.daomain.Movie">
+        insert into movie (movieName,showDate, timeLength, director,description,photo )
+        values (#{movieName},#{showDate}, #{timeLength}, #{director},
+        #{description}, #{photo})
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <insert id="insertMovieAndType" parameterType="com.ujiuye.daomain.MovieAndType">
+        insert into movie_type(movieId, movieTypeId) values (#{movieId}, #{movieTypeId})
+    </insert>
 </mapper>
