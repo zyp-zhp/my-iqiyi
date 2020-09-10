@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class Movie {
-    private Integer id;
+    private int id;
     private String movieName;
     private Date showdate;
     private int timelength;
@@ -19,7 +19,8 @@ public class Movie {
     private String description;
     private String photo;
     private List<Recommend> Recommends;
-    private List<Movietype> movietypes;
+    private String movietypes;
+    private List<Movietype> movietypeList;
     private List<Actor> actors;
 
     public Integer getId() {
@@ -86,12 +87,20 @@ public class Movie {
         Recommends = recommends;
     }
 
-    public List<Movietype> getMovietypes() {
+    public String getMovietypes() {
         return movietypes;
     }
 
-    public void setMovietypes(List<Movietype> movietypes) {
+    public void setMovietypes(String movietypes) {
         this.movietypes = movietypes;
+    }
+
+    public List<Movietype> getMovietypeList() {
+        return movietypeList;
+    }
+
+    public void setMovietypeList(List<Movietype> movietypeList) {
+        this.movietypeList = movietypeList;
     }
 
     public List<Actor> getActors() {

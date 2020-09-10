@@ -32,7 +32,7 @@
         select
         m.*,
         a.id aid,a.name aname,a.birthday abirthday,a.sex
-        asex,a.description adescription, a.pic apic,
+        asex,a.description adescription, a.photo aphoto,
         c.id cid, c.catname catname
         from
         movie m
@@ -45,7 +45,7 @@
         on
         ma.actorid=a.id
         inner join
-        movie_category mc
+        movie_type mc
         on
         m.id=mc.movieid
         inner join
@@ -65,4 +65,28 @@
     <insert id="insertMovieAndType" parameterType="com.ujiuye.daomain.MovieAndType">
         insert into movie_type(movieId, movieTypeId) values (#{movieId}, #{movieTypeId})
     </insert>
+
+    <!--删除电影与类型的中间表中的记录-->
+    <delete id="deleteMovieAndType" >
+        delete from movie_type where movieid=#{id}
+    </delete>
+
+    <!--删除电影与演员的中间表中的记录-->
+    <delete id="deleteMovieActorById" >
+        delete from movie_actor where movieid = #{id}
+    </delete>
+
+    <!--删除电影中的记录-->
+    <delete id="deleteMovieById" >
+        delete from movie where id = #{id}
+    </delete>
+
+    <!--修改电影-->
+    <update id="update" parameterType="com.ujiuye.daomain.Movie">
+
+        update movie
+        set name=#{movieName}, photo=#{photo},description=#{description},showDate=#{showDate},
+        timeLength=#{timeLength},director=#{director}
+        where id = #{id}
+    </update>
 </mapper>

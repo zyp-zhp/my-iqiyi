@@ -14,11 +14,16 @@ public interface MovieMapper {
 
     public void insertMovieAndType(MovieAndType mat);
 //3) 修改电影接口
-    public Integer updateMovieById(Movie movie);
+    public void update(Movie movie);
 //4) 删除电影接口
-    public Integer deleteMovieById(Integer id);
+    public void deleteMovieById(Integer id);
 
-//    1) 电影详情接口
+    Movie findById(int movieId);
+
+
+
+
+    //    1) 电影详情接口
     public Movie findMoviedirectionById(Integer id);
 //2) 电影类别接口
     public List<Movietype> findMovieTypeById(Integer id);
@@ -38,4 +43,6 @@ public interface MovieMapper {
     public Integer updateMovieActorById(Integer id);
     //4) 删除电影演员接口
     public Integer deleteMovieActorById(Integer id);
+//电影与类型的中间表
+    public  void deleteMovieAndType(int movieId);
 }
