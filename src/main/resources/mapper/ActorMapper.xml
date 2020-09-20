@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
 <mapper namespace="com.ujiuye.dao.ActorMapper">
 
     <resultMap type="com.ujiuye.daomain.Actor" id="actorMap">
@@ -15,24 +17,79 @@
             <id property="id" column="rid" />
             <result property="regionName" column="regionName" />
         </collection>
-
-
     </resultMap>
 
-    <select id="findAllActor" resultMap="actorMap">
+    <select id="findAll" resultMap="actorMap">
         select
         a.*,
-        r.id rid, r.name rname
+        r.id rid, r.regionName rname
         from
         actor a
-        inner join
+        left join
         actor_region ar
         on
-        a.id=ar.actorid
-        inner join
+        a.id=ar.actorId
+        left join
         region r
         on
-        r.id=ar.regionid
+        r.id=ar.regionId
 
     </select>
+
+    <!--向actor表中插入演员的记录-->
+    <insert id="save" parameterType="com.ujiuye.daomain.Actor" >
+        insert into
+        actor (actorName,birthday,sex,description,photo )
+        values
+        (#{actorName},#{birthday},#{sex},#{description},#{photo})
+
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <!--向演员与区域的中间表中插入记录 -->
+    <insert id="saveActorAndRegion" parameterType="com.ujiuye.daomain.ActorAndRegion">
+        insert into actor_region (actorId, regionId) values (#{aid}, #{rid})
+    </insert>
+
+    <select id="findById" resultMap="actorMap">
+        select
+        a.*,
+        r.id rid, r.regionName rname
+        from
+        actor a
+        left join
+        actor_region ar
+        on
+        a.id=ar.actorId
+        left join
+        region r
+        on
+        r.id=ar.regionId
+        where a.id = #{id}
+    </select>
+
+    <!--更新演员记录-->
+    <update id="update" parameterType="com.ujiuye.daomain.Actor">
+        update actor set
+        actorName = #{actorName},
+        birthday = #{birthday},
+        sex = #{sex},
+        description = #{description},
+        photo = #{photo}
+        where
+        id = #{id}
+    </update>
+
+    <!--根据演员id删除演员与区域中间表中的相关的记录-->
+    <delete id="deleteActorAndRegion" >
+        delete from actor_region where actorId = #{id}
+    </delete>
+
+
+    <!--根据演员id删除演员表中的相关记录-->
+    <delete id="delete" >
+        delete from actor where id = #{id}
+    </delete>
 </mapper>

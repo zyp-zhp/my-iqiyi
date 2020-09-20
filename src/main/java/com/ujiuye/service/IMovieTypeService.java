@@ -7,5 +7,5 @@ import java.util.List;
 
 @Service
 public interface IMovieTypeService {
-    List<Movietype> findALl();
+    List<Movietype> findAll();
 }

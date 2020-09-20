@@ -1,6 +1,6 @@
 package com.ujiuye.daomain;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,14 +13,19 @@ import java.util.List;
 public class Movie {
     private int id;
     private String movieName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date showdate;
     private int timelength;
     private String director;
     private String description;
+    private float rating;
     private String photo;
-    private List<Recommend> Recommends;
+    private List<RecommendType> recommendTypes;
+    // 一个电影有多个类型,一对多的关系
     private String movietypes;
     private List<Movietype> movietypeList;
+    // 在电影与演员的编辑界面,选中的多个演员的id,比如: "1,3,4"
+    private String actorIds;
     private List<Actor> actors;
 
     public Integer getId() {
@@ -79,12 +84,12 @@ public class Movie {
         this.photo = photo;
     }
 
-    public List<Recommend> getRecommends() {
-        return Recommends;
+    public List<RecommendType> getRecommendTypes() {
+        return recommendTypes;
     }
 
-    public void setRecommends(List<Recommend> recommends) {
-        Recommends = recommends;
+    public void setRecommendTypes(List<RecommendType> recommendTypes) {
+        this.recommendTypes = recommendTypes;
     }
 
     public String getMovietypes() {
@@ -109,5 +114,21 @@ public class Movie {
 
     public void setActors(List<Actor> actors) {
         this.actors = actors;
+    }
+
+    public String getActorIds() {
+        return actorIds;
+    }
+
+    public void setActorIds(String actorIds) {
+        this.actorIds = actorIds;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

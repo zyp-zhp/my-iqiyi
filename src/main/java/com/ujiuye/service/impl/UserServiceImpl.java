@@ -1,7 +1,8 @@
-package com.ujiuye.service;
+package com.ujiuye.service.impl;
 
 import com.ujiuye.dao.UserMapper;
 import com.ujiuye.daomain.User;
+import com.ujiuye.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void insertUser(User user){
         userMapper.insertUser(user);
+        System.out.println("userid == " + user.getId());
     }
     @Override
     //    用户手机密码登录接口

@@ -1,83 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-
 <mapper namespace="com.ujiuye.dao.MovieMapper">
+
     <resultMap type="com.ujiuye.daomain.Movie" id="movieMap">
         <id property="id" column="id" />
-        <result property="movieName" column="name" />
+        <result property="movieName" column="movieName" />
         <result property="director" column="director" />
-        <result property="timelength" column="timelength" />
+        <result property="timelength" column="timeLength" />
         <result property="showdate" column="showdate" />
         <result property="description" column="description" />
+        <result property="rating" column="rating" />
         <result property="photo" column="photo" />
 
-        <collection  property="movietypes"  ofType="com.ujiuye.daomain.Movietype">
-            <id property="id" column="id" />
+        <collection  property="movietypeList"  ofType="com.ujiuye.daomain.Movietype">
+            <id property="id" column="cid" />
             <result property="movieTypeName" column="movieTypeName" />
         </collection>
 
         <collection  property="actors"  ofType="com.ujiuye.daomain.Actor">
-            <id property="id" column="id" />
-            <result property="actorName" column="actorName" />
-            <result property="birthday" column="birthday" />
-            <result property="sex" column="sex" />
-            <result property="description" column="description" />
-            <result property="photo" column="photo" />
+            <id property="id" column="aid" />
+            <result property="actorName" column="aname" />
+            <result property="birthday" column="abirthday" />
+            <result property="sex" column="asex" />
+            <result property="description" column="adescription" />
+            <result property="photo" column="aphoto" />
         </collection>
     </resultMap>
 
-    <select id="findAllMovie" resultMap="movieMap">
+    <select id="findAll" resultMap="movieMap">
         select
         m.*,
-        a.id aid,a.name aname,a.birthday abirthday,a.sex
+        a.id aid,a.actorName aname,a.birthday abirthday,a.sex
         asex,a.description adescription, a.photo aphoto,
-        c.id cid, c.catname catname
+        c.id cid, c.movieTypeName movieTypeName
         from
         movie m
-        inner join
+        left join
+        movie_actor ma
+        on
+        m.id=ma.movieId
+        left join
+        actor a
+        on
+        ma.actorId=a.id
+        left join
+        movie_type mc
+        on
+        m.id=mc.movieId
+        left join
+        movietype c
+        on mc.movieTypeId=c.id
+    </select>
+
+    <select id="findById" resultMap="movieMap">
+        select
+          m.*,
+         a.id aid,a.actorName aname,a.birthday abirthday,a.sex
+         asex,a.description adescription, a.photo aphoto,
+         c.id cid, c.movieTypeName movieTypeName
+        from
+        movie m
+        left join
         movie_actor ma
         on
         m.id=ma.movieid
-        inner join
+        left join
         actor a
         on
-        ma.actorid=a.id
-        inner join
+        ma.actorId=a.id
+        left join
         movie_type mc
         on
-        m.id=mc.movieid
-        inner join
-        category c
-        on mc.categoryid=c.id
+        m.id=mc.movieId
+        left join
+        movietype c
+        on mc.movieTypeId=c.id
+        where m.id = #{id}
     </select>
 
-    <insert id="insertMovie" parameterType="com.ujiuye.daomain.Movie">
-        insert into movie (movieName,showDate, timeLength, director,description,photo )
-        values (#{movieName},#{showDate}, #{timeLength}, #{director},
-        #{description}, #{photo})
+    <insert id="save" parameterType="com.ujiuye.daomain.Movie">
+        insert into movie (movieName, photo, description,showDate, timeLength, director)
+        values (#{movieName},#{photo}, #{description}, #{showDate},
+        #{timeLength}, #{director})
         <selectKey resultType="Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID() AS id
         </selectKey>
     </insert>
 
-    <insert id="insertMovieAndType" parameterType="com.ujiuye.daomain.MovieAndType">
-        insert into movie_type(movieId, movieTypeId) values (#{movieId}, #{movieTypeId})
+    <insert id="insertMovieAndCategory" parameterType="com.ujiuye.daomain.MovieAndType">
+        insert into movie_type (movieId,movieTypeId) values (#{movieId}, #{movieTypeId})
     </insert>
 
     <!--删除电影与类型的中间表中的记录-->
-    <delete id="deleteMovieAndType" >
-        delete from movie_type where movieid=#{id}
+    <delete id="deleteMovieAndcategories" >
+        delete from movie_type where movieId=#{id}
     </delete>
 
     <!--删除电影与演员的中间表中的记录-->
-    <delete id="deleteMovieActorById" >
-        delete from movie_actor where movieid = #{id}
+    <delete id="deleteMovieAndActors" >
+        delete from movie_actor where movieId = #{id}
     </delete>
 
     <!--删除电影中的记录-->
-    <delete id="deleteMovieById" >
+    <delete id="deleteById" >
         delete from movie where id = #{id}
     </delete>
 
@@ -85,8 +111,80 @@
     <update id="update" parameterType="com.ujiuye.daomain.Movie">
 
         update movie
-        set name=#{movieName}, photo=#{photo},description=#{description},showDate=#{showDate},
+        set movieName=#{movieName}, photo=#{photo},description=#{description},showDate=#{showDate},
         timeLength=#{timeLength},director=#{director}
         where id = #{id}
+
     </update>
+
+    <select id="findTop3ByCates" resultMap="movieMap">
+        select
+        m.*,
+        a.id aid,a.actorName aname,a.birthday abirthday,a.sex
+        asex,a.description adescription, a.photo aphoto,
+        c.id cid, c.movieTypeName movieTypeName
+        from
+        movie m
+        left join
+        movie_actor ma
+        on
+        m.id=ma.movieId
+        left join
+        actor a
+        on
+        ma.actorId=a.id
+        left join
+        movie_type mc
+        on
+        m.id=mc.movieId
+        left join
+        movietype c
+        on mc.movieTypeId=c.id
+        where m.id != #{id} and m.id in (
+        select mcate.movieId from movie_type mcate
+        where mcate.movieId != #{id} and mcate.movieTypeId in (
+        select mcc.id from movie mm
+        left join movie_type mcc on mcc.movieId = mm.id
+        where mm.id = #{id}
+        )
+        )
+        order by m.showDate desc
+        LIMIT 0, 3
+    </select>
+
+    <select id="findTop3ByActors" resultMap="movieMap">
+        select
+        m.*,
+        a.id aid,a.actorName aname,a.birthday abirthday,a.sex
+        asex,a.description adescription, a.photo aphoto,
+        c.id cid, c.movieTypeName movieTypeName
+        from
+        movie m
+        left join
+        movie_actor ma
+        on
+        m.id=ma.movieId
+        left join
+        actor a
+        on
+        ma.actorId=a.id
+        left join
+        movie_type mc
+        on
+        m.id=mc.movieId
+        left join
+        movietype c
+        on mc.movieTypeId=c.id
+        where m.id != #{id} and  m.id in (
+            select mac.movieId from movie_actor mac
+            where mac.movieId != #{id} and mac.actorId in (
+            # 查询这个电影的所有演员的id
+            select acc.id from actor acc
+            left join movie_actor macc on macc.actorId = acc.id
+            where macc.movieId = #{id}
+            )
+        )
+        order by m.showDate desc
+        LIMIT 0, 3
+    </select>
 </mapper>
